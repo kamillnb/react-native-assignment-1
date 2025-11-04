@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StatusBar, Text, View, Button } from 'react-native';
+import { StatusBar, Text, View, Button, useColorScheme } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
+  const isDark = useColorScheme() === 'dark';
   const [count, setCount] = useState(0);
-  const [ping, setPing] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setPing(`Hello #${count}`), 500);
+    const t = setTimeout(() => setMessage(`Hello #${count}`), 500);
     return () => clearTimeout(t);
   }, [count]);
 
   return (
-    <SafeAreaView>
-      <StatusBar />
-      <View style={{ padding: 24 }}>
-        <Text style={{ fontSize: 24, fontWeight: '600' }}>MyFirstApp</Text>
-        <Text>Count: {count}</Text>
-        <Text>{ping ?? 'Waiting...'}</Text>
-        <Button title="Increment" onPress={() => setCount(c => c + 1)} />
-      </View>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
+      <SafeAreaView>
+        <View style={{ padding: 24 }}>
+          <Text style={{ fontSize: 28, fontWeight: '700' }}>MyFirstApp</Text>
+          <Text>Count: {count}</Text>
+          <Text>{message ?? 'Waiting…'}</Text>
+          <Button title="Increment" onPress={() => setCount(c => c + 1)} />
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
